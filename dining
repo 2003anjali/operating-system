@@ -16,7 +16,7 @@ int main()
     void *msg;
     for( i=1;i<NUM_CHOPSTICKS;i++)
     {
-        status_message = pthread_mutex_int(&chopstick[i],NULL);
+        status_message = pthread_mutex_init(&chopstick[i],NULL);
         if(status_message==-1)
         {
             printf("\nMutex initialization failed");
@@ -51,4 +51,16 @@ int main()
         }
     }
     return 0;
+}
+
+void dine(int n)
+{
+    printf("\nPhilosopher %d is thinking",n);
+    pthread_mutex_lock(&chopstick[n]);
+    pthread_mutex_lock(&chopstick[n+1%NUM_CHOPSTICKS]);
+    printf("\nPhilosopher %d is eating",n);
+    sleep(3);
+    pthread_mutex_unlock(&chopstick[n]);
+    pthread_mutex_unlock(&chopstick[n+1%NUM_CHOPSTICKS]);
+    printf("\nPhilosopher %d finished eating",n);
 }
