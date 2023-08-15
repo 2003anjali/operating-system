@@ -20,7 +20,7 @@ int main()
         //Child process
         printf("Child process: Hello,I am the child!\n");
         printf("Child process: My PID is %d\n",getpid());
-        printf("Child process: My parent's PID is %d\n",getpid());
+        printf("Child process: My parent's PID is %d\n",getppid());
 
         //terminate child process
         _exit(0);
