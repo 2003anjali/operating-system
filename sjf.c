@@ -1,81 +1,74 @@
 #include<stdio.h>
-void printer(int processes[],int n,int burst_time[],int arrival_time[])
+#include<string.h>
+int main()
 {
-    int WT[n],TAT[n],total_WT=0,total_TAT=0,completion_time[n];
-    for (int i = 0; i < n; i++)//calculating times
+    int bt[20],at[10],n,i,j,temp,st[10],ft[10],wt[10],tat[10];
+    int totwt=0,tottat=0;
+    float awt,atat;
+    char pn[10][10],t[10];
+    printf("Enter the number of process:");
+    scanf("%d",&n);
+    for(i=0; i<n; i++)
     {
-        if(i==0)
-        {
-            WT[0]=0;
-            completion_time[0]=burst_time[0]+arrival_time[0];
-            TAT[0]=completion_time[0]-arrival_time[0];
-            total_TAT=TAT[0];
-            continue;
-        }
-        if(completion_time[i-1]<arrival_time[i])
-        {
-            completion_time[i]=arrival_time[i]+burst_time[i];
-        }
-        else
-        {
-            completion_time[i]=completion_time[i-1]+burst_time[i];
-        }
-        TAT[i]=completion_time[i]-arrival_time[i];
-        total_TAT+=TAT[i];
-        WT[i]=TAT[i]-burst_time[i];
-        total_WT+=WT[i];
+        printf("Enter process name, arrival time& burst time:");
+        scanf("%s%d%d",pn[i],&at[i],&bt[i]);
     }
-    printf("Processes\tAT\tBT\tWT\tTAT\tCT\n");
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d\t\t%d\t%d\t%d\t%d\t%d\n",processes[i],arrival_time[i],burst_time[i],WT[i],TAT[i],completion_time[i]);
-    }
-    printf("AVG waiting time: %2f\n",(float)total_WT/n);
-    printf("AVG turnaround time: %2f\n",(float)total_TAT/n);
-    printf("\n");
-}
-void sjf(int processes[],int n,int burst_time[],int arrival_time[])
-{
-    int WT[n],TAT[n],total_WT=0,completion_time[n],total_TAT=0;
-    for (int i = 0; i < n; i++)
-    {
-        int shortest_job_index=i;
-        for (int j = i+1; j < n; j++)
+    for(i=0; i<n; i++)
+        for(j=0; j<n; j++)
         {
-            if (burst_time[j]<burst_time[shortest_job_index])
+            if(bt[i]<bt[j])
             {
-                shortest_job_index=j;
+                temp=at[i];
+                at[i]=at[j];
+                at[j]=temp;
+                temp=bt[i];
+                bt[i]=bt[j];
+                bt[j]=temp;
+                strcpy(t,pn[i]);
+                strcpy(pn[i],pn[j]); 
+                strcpy(pn[j],t);
             }
         }
-        int temp=burst_time[i];
-        burst_time[i]=burst_time[shortest_job_index];
-        burst_time[shortest_job_index]=temp;
-        
-        temp=processes[i];
-        processes[i]=processes[shortest_job_index];
-        processes[shortest_job_index]=temp;
-
-        temp=arrival_time[i];
-        arrival_time[i]=arrival_time[shortest_job_index];
-        arrival_time[shortest_job_index]=temp;
-    }
-    printf("SJF agorithm\n");
-    printer(processes,n,burst_time,arrival_time);
-}
-void main()
-{
-    int n;
-    int quantum;
-    printf("Enter the number of processes: ");
-    scanf("%d",&n);
-    int processes[n],burst_time[n],arrival_time[n];
-    for (int i = 0; i < n; i++)
+    for(i=0; i<n; i++)
     {
-        printf("Enter the arrival time for process %d:",i+1);
-        scanf("%d",&arrival_time[i]);
-        printf("Enter the Burst time for processes %d:",i+1);
-        scanf("%d",&burst_time[i]);
-        processes[i]=i+1;
+        if(i==0)
+        st[i]=at[i];
+        else
+        st[i]=ft[i-1];
+        wt[i]=st[i]-at[i];
+        ft[i]=st[i]+bt[i];
+        tat[i]=ft[i]-at[i];
+        totwt+=wt[i];
+        tottat+=tat[i];
     }
-    sjf(processes,n,burst_time,arrival_time);
+    awt=(float)totwt/n;
+    atat=(float)tottat/n;
+    printf("\nPname\tarrivaltime\tbursttime\twaitingtime\ttatime");
+    for(i=0; i<n; i++)
+        printf("\n%s\t%5d\t\t%5d\t\t%5d\t\t%5d",pn[i],at[i],bt[i],wt[i],tat[i]);
+    printf("\nAverage waiting time is:%f",awt);
+    printf("\nAverage turnaroundtime is:%f",atat);
+    return 0;
 }
+
+// Enter the number of process:4
+// Enter process name, arrival time& burst time:1
+// 1
+// 3
+// Enter process name, arrival time& burst time:2
+// 2
+// 4
+// Enter process name, arrival time& burst time:3
+// 1
+// 2
+// Enter process name, arrival time& burst time:4
+// 4
+// 4
+
+// Pname   arrivaltime     bursttime       waitingtime     tatime
+// 3           1               2               0               2
+// 1           1               3               2               5
+// 2           2               4               4               8
+// 4           4               4               6              10
+// Average waiting time is:3.000000
+// Average turnaroundtime is:6.250000
