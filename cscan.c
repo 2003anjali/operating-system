@@ -48,15 +48,18 @@ int main()
            totalheadmovement=totalheadmovement+abs(rq[i]-initial);
            initial=rq[i];
        }
-
        totalheadmovement=totalheadmovement+abs(size-rq[i-1]-1);
-       initial=size-1;
-       for ( i = index-1; i >=0; i--)
+
+       totalheadmovement=totalheadmovement+abs(size-1);
+       initial=0;
+       for ( i = 0; i<index; i++)
        {
         printf("%d ",rq[i]);
         totalheadmovement=totalheadmovement+abs(rq[i]-initial);
         initial=rq[i];
-       }   
+       }
+       
+       
     }
    else
    {
@@ -68,9 +71,10 @@ int main()
         totalheadmovement=totalheadmovement+abs(rq[i]-initial);
         initial=rq[i];
        }
-       totalheadmovement=totalheadmovement+abs(size-rq[i-1]-1);
-       initial=0;
-         for ( i = index; i >=0; i--)
+       totalheadmovement=totalheadmovement+abs(rq[i+1]-0);
+        totalheadmovement=totalheadmovement+abs(size-1-0);
+       initial=size-1;
+         for ( i = n-1; i >=index; i--)
        {
         printf("%d ",rq[i]);
         totalheadmovement=totalheadmovement+abs(rq[i]-initial);
@@ -98,5 +102,5 @@ int main()
 // Enter the head movement direction for high 1 and for low 0
 // 1
 // Sequence of request access:
-// 82 140 170 190 43 24 16 
-// Total head movement is 332
+// 82 140 170 190 16 24 43 
+// Total head movement is 391
